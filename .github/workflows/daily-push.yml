@@ -1,0 +1,34 @@
+name: Daily Mystery Push
+
+on:
+  schedule:
+    - cron: "0 0 * * *" # Runs at 00:00 UTC every day
+  workflow_dispatch: # Allows manual trigger
+
+jobs:
+  create-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Compile TypeScript
+        run: npx tsc generate_mystery.ts
+
+      - name: Generate mystery file
+        run: node generate_mystery.js
+
+      - name: Commit and push
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "🎭 Daily mysterious update"
+          git push
