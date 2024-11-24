@@ -2,30 +2,35 @@ name: Daily Mystery Push
 
 on:
   schedule:
-    - cron: "0 0 * * *"
+    - cron: '0 0 * * *'
   workflow_dispatch:
 
+# Add these permissions
+permissions:
+  contents: write
+  
 jobs:
   create-commit:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
+        with:
+          persist-credentials: true # Add this line
+      
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
-
+          node-version: '20'
+          
       - name: Install dependencies
         run: npm install
-
+        
       - name: Build TypeScript
-        run: |
-          npx tsc
-
+        run: npx tsc
+        
       - name: Generate mystery file
         run: node dist/generate_mystery.js
-
+        
       - name: Commit and push
         run: |
           git config --local user.email "action@github.com"
