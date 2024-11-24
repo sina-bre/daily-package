@@ -2,8 +2,8 @@ name: Daily Mystery Push
 
 on:
   schedule:
-    - cron: "0 0 * * *" # Runs at 00:00 UTC every day
-  workflow_dispatch: # Allows manual trigger
+    - cron: "0 0 * * *"
+  workflow_dispatch:
 
 jobs:
   create-commit:
@@ -19,11 +19,12 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Compile TypeScript
-        run: npx tsc generate_mystery.ts
+      - name: Build TypeScript
+        run: |
+          npx tsc
 
       - name: Generate mystery file
-        run: node generate_mystery.js
+        run: node dist/generate_mystery.js
 
       - name: Commit and push
         run: |

@@ -1,12 +1,12 @@
 {
   "name": "daily-mystery",
   "version": "1.0.0",
-  "dependencies": {
-    "@types/node": "^20.0.0",
-    "typescript": "^5.0.0"
-  },
   "scripts": {
     "build": "tsc",
-    "start": "node generate_mystery.js"
+    "start": "node dist/generate_mystery.js"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
   }
 }
