@@ -1,9 +1,9 @@
-import * as crypto from "crypto";
-import * as fs from "fs/promises";
+import { randomBytes, createHash, createHmac } from "crypto";
+import { writeFile } from "fs/promises";
 
 class MysteryGenerator {
   private getRandomString(length: number): string {
-    return crypto.randomBytes(length).toString("base64");
+    return randomBytes(length).toString("base64");
   }
 
   private encodeWithDate(input: string): string {
@@ -19,14 +19,12 @@ class MysteryGenerator {
   private async generateContent(): Promise<string> {
     const timestamp = Date.now();
     const randomData = this.getRandomString(32);
-    const hash = crypto
-      .createHash("sha256")
+    const hash = createHash("sha256")
       .update(`${timestamp}-${randomData}`)
       .digest("base64");
 
     const layer1 = Buffer.from(hash).toString("base64");
-    const layer2 = crypto
-      .createHmac("sha512", randomData)
+    const layer2 = createHmac("sha512", randomData)
       .update(layer1)
       .digest("base64");
 
@@ -36,7 +34,7 @@ class MysteryGenerator {
   public async createMysteryFile(): Promise<void> {
     try {
       const content = await this.generateContent();
-      await fs.writeFile("mysterious_file.txt", content);
+      await writeFile("mysterious_file.txt", content);
       console.log("Mystery file created successfully!");
     } catch (error) {
       console.error("Error creating mystery file:", error);
